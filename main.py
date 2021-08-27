@@ -1,5 +1,6 @@
 from selenium import webdriver
 from datetime import datetime
+import time
 money = None
 buy_cursor = None
 buy_grandma = None
@@ -57,14 +58,16 @@ def final_result():
     cps = float(driver.find_element_by_id("cps").text.split(":")[1].strip())
     return money, cps
 
-start = datetime.now()
+timeout = time.time() + 5
+five_min = time.time() + 60*5 # 5minutes
 is_on = True
 while is_on:
     cookie.click()
-    if (datetime.now()-start).seconds != 0 and (datetime.now()-start).seconds % 10 == 0:
+    if time.time() > timeout:
         get_item_value()
         buy_items()
-    if(datetime.now()-start).seconds >= runtime:
+        timeout = time.time() + 5
+    if time.time() > five_min:
         is_on = False
 
 print(final_result())
